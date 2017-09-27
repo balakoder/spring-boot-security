@@ -26,7 +26,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-   /* @Override
+     @Override
     protected void configure(HttpSecurity http) throws Exception {
          
      
@@ -52,7 +52,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .ignoring()
            .antMatchers("/resources/**");
         
-    }*/
+    } 
 
    @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {

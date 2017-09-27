@@ -1,5 +1,6 @@
 package com.bala.springbootsecurity.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -18,9 +19,14 @@ import org.hibernate.validator.constraints.NotEmpty;
 @Entity
 @Table(name = "user")
 @Proxy(lazy=false)
-public class User {
+public class User   implements Serializable  {
 
  
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Id @GeneratedValue(generator="system-uuid")
 	@GenericGenerator(name="system-uuid",
 	  strategy = "uuid")
@@ -62,10 +68,11 @@ public String getId() {
      @Column(name = "phone")
     private String phone;
    
-
+    @Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "date_created")
     private Date dateCreated;
 
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "last_updated")
     private Date lastUpdated;
     
@@ -174,6 +181,16 @@ public String getId() {
 
     public void setLname(String lname) {
         this.lname = lname;
+    }
+    
+    @PrePersist
+    protected void onCreate() {
+    	lastUpdated = dateCreated = new Date();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+    	lastUpdated = new Date();
     }
  
   //  @OneToMany//(cascade = CascadeType.ALL)

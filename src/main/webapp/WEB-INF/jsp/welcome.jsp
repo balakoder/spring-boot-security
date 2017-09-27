@@ -56,58 +56,8 @@
 			<strong>Success!</strong> ${error}
 		</div>
 	</c:if>
-  <a href="register" class="btn btn-group btn-default btn-animated" >Click here to register more </a>
+  <a href="/logout" class="btn btn-group btn-default btn-animated" >Click here to Logout </a>
  
-
-	<div class="container-fluid">
-		<div class="row">
-
-		 
-		 
-			<div class="col-md-8 col-md-offset-2">
-				<div class="panel panel-default">
-				 
-												 
-					<div class="panel-body">
-
-						<div class="table-container">
-								<table class="table table-filter">
-									<thead>
-
-										<tr>
-											<th>Id</th>
-											<th>Fname</th>
-											<th>Lame</th>
-											<th>Username</th>
-											<th>Phone</th>
-											<th>Email</th>
-										</tr>
-									</thead>
-									<tbody>
-										<c:forEach items="${userlist}" var="user">
-
-											<tr data-status="pagado">
-												<td>${user.id}</td>
-												<td>${user.fname}</td>
-												<p class="summary">
-												<td>${user.lname}</td>
-												</p>
-												<td>${user.username}</td>
-												<td>${user.phone}</td>
-												<td>${user.email}</td> 
-											</tr>
-
-										</c:forEach>
-									</tbody>
-								</table>
-							</div>
-						</div>
-					</div>
-
-				</div>
-
-</div>
-			</div>
  
 </body>
 </html>

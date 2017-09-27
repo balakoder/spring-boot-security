@@ -13,10 +13,10 @@
 <body>
 
 <div class="jumbotron">
-  <h1>Hello Bala !!!</h1>
+  <h1>Success !!!</h1>
   <P> ${message}. </P>
    
-  <p><a class="btn btn-primary btn-lg" href="home" role="button">Home</a></p>
+  <p><a class="btn btn-primary btn-lg" href="login" role="button">Login</a></p>
 </div>
  
 
