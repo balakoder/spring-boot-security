@@ -12,7 +12,7 @@
 </head>
 <body>
 
-<div class="jumbotron">
+<div class="alert alert-success alert-dismissible fade show" role="alert">
   <h1>Success !!!</h1>
   <P> ${message}. </P>
    

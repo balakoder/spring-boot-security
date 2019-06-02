@@ -31,7 +31,7 @@
 				aria-label="Close">
 				<span aria-hidden="true">×</span>
 			</button>
-			<strong>Success!</strong> ${error}
+			<strong>Error!</strong> ${error}
 		</div>
 	</c:if>
 

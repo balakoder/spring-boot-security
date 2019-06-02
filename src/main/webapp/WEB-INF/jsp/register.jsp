@@ -12,6 +12,15 @@
 </head>
 <body>
 
+<c:if test="${message != null }">
+		<div class="alert alert-warning alert-dismissible fade show" role="alert">
+			<button type="button" class="close" data-dismiss="alert"
+				aria-label="Close">
+				<span aria-hidden="true">×</span>
+			</button>
+			<strong>Error!</strong> ${message}
+		</div>
+	</c:if>
 
  <div class="login-page">
   <div class="form">
@@ -19,7 +28,7 @@
   
   <form:form method="POST" class="login-form"  action="register" modelAttribute="user">
    
-      <form:input path="fname"  type="text" class="form-control" id="inputName" placeholder="Fisrt Name" />
+      <form:input path="fname"  type="text" class="form-control" id="inputName" placeholder="First Name" />
       
       <form:input path="lname" type="text" class="form-control"  placeholder="Last Name" />
      	
@@ -46,8 +55,8 @@
 
  
 		 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-<script src="${contextPath}/resources/js/bootstrap.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css"></script>
 <script type="text/javascript">
 $(document).ready(function () {
 console.log("hello");

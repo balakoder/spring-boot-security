@@ -37,18 +37,19 @@
 	<!-- main-container start -->
 	<!-- ================ -->
 	<c:if test="${message != null }">
-		<div class="alert alert-success alert-dismissible" role="alert">
+		<div class="alert alert-success alert-dismissible fade show" role="alert">
 			<button type="button" class="close" data-dismiss="alert"
 				aria-label="Close">
 				<span aria-hidden="true">×</span>
 			</button>
 			<strong>Success!</strong> ${message}
+			 <strong>Hello!</strong> ${user}
 		</div>
 	</c:if>
 
 
 	<c:if test="${error != null }">
-		<div class="alert alert-danger alert-dismissible" role="alert">
+		<div class="alert alert-danger alert-dismissible fade show" role="alert">
 			<button type="button" class="close" data-dismiss="alert"
 				aria-label="Close">
 				<span aria-hidden="true">×</span>
@@ -56,7 +57,7 @@
 			<strong>Success!</strong> ${error}
 		</div>
 	</c:if>
-  <a href="/logout" class="btn btn-group btn-default btn-animated" >Click here to Logout </a>
+  <a href="${contextPath}/logout" class="btn btn-group btn-default btn-animated" >Click here to Logout </a>
  
  
 </body>

@@ -1,27 +1,18 @@
 package com.bala.springbootsecurity.controller;
 
-import java.util.Date;
-
 import javax.validation.Valid;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
@@ -29,7 +20,10 @@ import org.springframework.web.servlet.ModelAndView;
 import com.bala.springbootsecurity.dao.UserDao;
 import com.bala.springbootsecurity.model.User;
 import com.bala.springbootsecurity.service.SecurityService;
+import com.bala.springbootsecurity.service.UserDetailsServiceImpl;
 import com.bala.springbootsecurity.service.UserService;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * A class to test interactions with the MySQL database using the UserDao class.
@@ -38,12 +32,13 @@ import com.bala.springbootsecurity.service.UserService;
  */
 @SessionAttributes("email")
 @Controller
-public class UserController {
+@Slf4j
+public class UserController
+{
 	@Autowired
 	private UserDao userDao;
 
 	private User user;
-	private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
 	@Autowired
 	private UserService userService;
@@ -51,28 +46,38 @@ public class UserController {
 	@Autowired
 	private SecurityService securityService;
 
+	@Autowired
+	UserDetailsServiceImpl userDetailsService;
+
+	static final String username = null;
+
 	@RequestMapping(value = "error", method = RequestMethod.GET)
-	public String handleError(Model model) {
+	public String handleError(Model model)
+	{
 
 		return "error";
 	}
 
 	@RequestMapping(value = "/handle-error", method = RequestMethod.GET)
-	public String handleErrorWithMessage(Model model) {
+	public String handleErrorWithMessage(Model model)
+	{
 
 		return "error/handleError";
 	}
 
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
-	public String logout(Model model) {
-		logger.info("logout the use....", "logout");
+	public String logout(Model model)
+	{
+		log.info("logout the user");
 		model.addAttribute("user", new User());
 		model.addAttribute("title", "Login");
+		model.addAttribute("message", "logout successfully!!!");
 		return "login";
 	}
 
 	@RequestMapping(value = "/register", method = RequestMethod.GET)
-	public String register(Model model) {
+	public String register(Model model)
+	{
 		model.addAttribute("title", "Register");
 		model.addAttribute("user", new User());
 		return "register";
@@ -81,15 +86,17 @@ public class UserController {
 
 	@RequestMapping("/getById/{id}")
 	@ResponseBody
-	public ResponseEntity<?> getById(@PathVariable("id") String id) {
+	public ResponseEntity<?> getById(@PathVariable("id") String id)
+	{
 		User user = null;
 
 		user = userDao.getById(id);
-		logger.info("usto be deleted the use.", user);
+		log.info("usto be deleted the use.", user);
 		System.out.println(user);
 
-		if (user == null) {
-			logger.error("Unable to delete. User with id {} not found.", id);
+		if (user == null)
+		{
+			log.error("Unable to delete. User with id {} not found.", id);
 
 		}
 
@@ -98,13 +105,15 @@ public class UserController {
 
 	@RequestMapping("/delete/{id}")
 	@ResponseBody
-	public ResponseEntity<?> delete(@PathVariable("id") String id) {
+	public ResponseEntity<?> delete(@PathVariable("id") String id)
+	{
 		String mail = "";
 		System.out.println(id);
 
 		User user = userDao.getById(id);
-		if (user == null) {
-			logger.error("Unable to delete. User with id {} not found.", id);
+		if (user == null)
+		{
+			log.error("Unable to delete. User with id {} not found.", id);
 			/*
 			 * return new ResponseEntity(new
 			 * CustomErrorType("Unable to delete. User with id " + id +
@@ -112,52 +121,60 @@ public class UserController {
 			 */
 		}
 
-		logger.info("usto be deleted the use.", user);
+		log.info("usto be deleted the use.", user);
 
 		userDao.delete(user);
 
-		logger.info("usto be deleted the use.", user);
+		log.info("usto be deleted the use.", user);
 		return new ResponseEntity<User>(HttpStatus.NO_CONTENT);
 	}
 
 	@ResponseBody
 	@RequestMapping(value = "/get-by-email/{email}")
-	public User getByEmail(@PathVariable(value = "email") String email) {
+	public User getByEmail(@PathVariable(value = "email") String email)
+	{
 		String userId;
 		User user = null;
-		System.out.println(email);
-		logger.info("user s email ", email);
-		try {
+		log.info("email is {}", email);
+		log.info("user s email ", email);
+		try
+		{
 			user = userDao.getByEmail(email);
-			System.out.println(user);
-			if (user != null) {
-				System.out.println(user);
-				logger.info("user is not null.", user);
-			} else {
-				System.out.println(user);
-				logger.info("user is  null.", user);
+			if (user != null)
+			{
+				log.info("user is not null.", user);
+			}
+			else
+			{
+				log.info("user is  null.", user);
 			}
 
-		} catch (Exception ex) {
-			logger.info("user is  null", user);
-			System.out.println(ex);
+		}
+		catch (Exception ex)
+		{
+			log.error("user is  null", user);
 		}
 		return user;
 	}
 
 	@RequestMapping("/update")
 	@ResponseBody
-	public String updateUser(@ModelAttribute("user") @Valid User user, BindingResult result) {
+	public String updateUser(@ModelAttribute("user") @Valid User user, BindingResult result)
+	{
 
-		if (result.hasErrors()) {
-			logger.info("login the hasErrors.", "logout");
+		if (result.hasErrors())
+		{
+			log.info("login the hasErrors.", "logout");
 
 			return "login";
 
-		} else {
-			User currentUser = null;// userDao.getById(user.getId());
-			if (currentUser == null) {
-				logger.error("Unable to update. User with id {} not found.", user.getId());
+		}
+		else
+		{
+			User currentUser = userDao.getById(user.getId());
+			if (currentUser == null)
+			{
+				log.error("Unable to update. User with id {} not found.", user.getId());
 
 			}
 			userDao.save(user);
@@ -168,7 +185,8 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/profile", method = RequestMethod.GET)
-	public String myProfile(Model model) {
+	public String myProfile(Model model)
+	{
 
 		model.addAttribute("title", "Profile");
 		return "profile";
@@ -176,7 +194,8 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public String myHome(Model model) {
+	public String myHome(Model model)
+	{
 
 		model.addAttribute("title", "Profile");
 		return "home";
@@ -184,31 +203,38 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
-	public String registration(@ModelAttribute("user") User user, BindingResult bindingResult, Model model) {
+	public String registration(@ModelAttribute("user") User user, BindingResult bindingResult, Model model)
+	{
 		// userValidator.validate(userForm, bindingResult);
-		logger.info("before binding the new user.", "User");
-		if (bindingResult.hasErrors()) {
+		log.info("UserController:registration:before binding the new user.{}", "User");
+		if (bindingResult.hasErrors())
+		{
 			return "register";
 		}
+		User user1 = userDao.getByEmail(user.getEmail());
 
-		user.setLastUpdated(new Date());
-		user.setDateCreated(new Date());
+		if (user1 != null)
+		{
+			model.addAttribute("message", "user already exists!!!");
+			return "register";
+		}
+		//	user.setLastUpdated(new Date());
+		//user.setDateCreated(new Date());
 
-		logger.info("before saving the new user.", "User");
+		log.info("before saving the new user.", "User");
 		userService.save(user);
-		logger.info("*************after saving the new user************.", "User");
-		// securityService.autologin(user.getEmail(),
-		// user.getPasswordConfirm());
+		securityService.autologin(user.getEmail(), user.getPasswordConfirm());
 
-		logger.info("before redirect:/welcome**************.", "User");
+		log.info("UserController:before redirect:/welcome**************.", "User");
 		model.addAttribute("message", "You have been registered successfully.You can continue by log in..");
-		
-		logger.info("You have been registered successfully.*****.", "User");
+
+		log.info("UserController:registration:You have been registered successfully.*****.", "User");
 		return "success";
 	}
 
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
-	public String login(Model model, String error, String logout) {
+	public String login(Model model, String error, String logout)
+	{
 		model.addAttribute("user", new User());
 		model.addAttribute("title", "Login");
 
@@ -221,17 +247,18 @@ public class UserController {
 		return "login";
 	}
 
-	@RequestMapping(value = { "/", "/welcome" }, method = RequestMethod.GET)
-	public ModelAndView welcome(Model model) {
-
+	@RequestMapping(value = { "/", "/welcome"}, method = RequestMethod.GET)
+	public ModelAndView welcome(Model model)
+	{
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("welcome");
 		model.addAttribute("message", "You have logged in successfully.");
+		log.info("UserController:welcome. roleName {}", "roleName");
 		return modelAndView;
 	}
 
-	public User getLoggedUser() {
+	public User getLoggedUser()
+	{
 		return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	}
-
 }
