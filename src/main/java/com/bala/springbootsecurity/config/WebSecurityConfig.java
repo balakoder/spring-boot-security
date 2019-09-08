@@ -11,56 +11,47 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.bala.springbootsecurity.filter.CustomFilter;
 
 @Transactional(readOnly = true)
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter
-{
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private UserDetailsService userDetailsService;
 
 	@Bean
-	public BCryptPasswordEncoder bCryptPasswordEncoder()
-	{
+	public BCryptPasswordEncoder bCryptPasswordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
 
 	@Override
-	protected void configure(HttpSecurity http) throws Exception
-	{
+	protected void configure(HttpSecurity http) throws Exception {
 
-		http.authorizeRequests().antMatchers("/resources/**", "/register").permitAll().anyRequest().authenticated().and().formLogin().defaultSuccessUrl("/welcome", true).loginPage("/login").permitAll().and().logout().logoutSuccessUrl("/login").permitAll();
+		http.authorizeRequests().antMatchers("/resources/**", "/register").permitAll().anyRequest().authenticated()
+				.and().authorizeRequests().and().formLogin().defaultSuccessUrl("/home", true).loginPage("/login")
+				.permitAll().and().logout().logoutSuccessUrl("/login").permitAll();
+		http.addFilterAfter(new CustomFilter(), BasicAuthenticationFilter.class);
 
 	}
 
 	@Override
-	public void configure(final WebSecurity web) throws Exception
-	{
-		// web.ignoring().antMatchers("/WEB-INF/jsp/**");
-		//web.ignoring().antMatchers("/resources/**");
+	public void configure(final WebSecurity web) throws Exception {
 		web.ignoring().antMatchers("/resources/**");
 
 	}
 
 	@Autowired
-	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception
-	{
+	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder());
 	}
 
-	/*
-	 @Autowired
-	 public void configureGlobalSecurity(AuthenticationManagerBuilder auth)
-	         throws Exception {
-	     auth.inMemoryAuthentication().withUser("xyz@gmail.com").password("password")
-	             .roles("USER", "ADMIN");
-	 } */
 	@Bean
-	public AuthenticationManager customAuthenticationManager() throws Exception
-	{
+	public AuthenticationManager customAuthenticationManager() throws Exception {
 		return authenticationManager();
 	}
 }

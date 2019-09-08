@@ -1,48 +1,38 @@
 package com.bala.springbootsecurity.model;
- 
 
-import javax.persistence.*;
+import java.util.Set;
+
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import java.util.List;
-import java.util.Set;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "role")
 public class Role {
-   
-	
-	
-	   
-    @Id @GeneratedValue(generator="system-uuid")
-	@GenericGenerator(name="system-uuid",
-	  strategy = "uuid")
-    @Column(name = "id")
-    private String id; 
 
-    @Column(name = "name")
-    private String name;
-	
-    private Set<User> users;
- 
+	@Id
+	@GeneratedValue(generator = "system-uuid")
+	@GenericGenerator(name = "system-uuid", strategy = "uuid")
+	@Column(name = "id")
+	private String id;
 
-    public String getName() {
-        return name;
-    }
+	@Column(name = "name")
+	private String name;
 
-    public void setName(String name) {
-        this.name = name;
-    }
-    
-    @Access(AccessType.PROPERTY)
-    @ManyToMany(mappedBy = "roles")
-    public Set<User> getUsers() {
-        return users;
-    }
+	@Access(AccessType.PROPERTY)
+	@ManyToMany(mappedBy = "roles")
+	private Set<User> users;
 
-    public void setUsers(Set<User> users) {
-        this.users = users;
-    }
 }
-

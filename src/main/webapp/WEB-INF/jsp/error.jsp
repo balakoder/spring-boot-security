@@ -26,8 +26,8 @@
 
         
 
-          <p><b>Or you could just press this neat little button:</b></p>
-          <a href="${cp}/login" class="btn btn-large btn-info"><i class="icon-home icon-white"></i> Take Me Home</a>
+          <p><b>Or you could just press this neat little button </b></p>
+          <a href="${cp}/home"> Take Me Home</a></p>
         </div>
         <br />
          </div>
