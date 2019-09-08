@@ -21,31 +21,28 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class UserDetailsServiceImpl implements UserDetailsService
-{
+public class UserDetailsServiceImpl implements UserDetailsService {
 
 	@Autowired
 	private UserDao userDao;
 
 	@Override
 	@Transactional(readOnly = true)
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException, DataAccessException
-	{
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException, DataAccessException {
 		User user = userDao.getByUsername(username);
 		log.info("User is ********* {}", user);
 
-		if (user == null)
-		{
+		if (user == null) {
 			throw new UsernameNotFoundException("Oops!");
 		}
 
 		Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
 
-		for (Role role : user.getRoles())
-		{
+		for (Role role : user.getRoles()) {
 			grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));
 		}
 		log.info("grantedAuthorities {}", grantedAuthorities);
-		return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), grantedAuthorities);
+		return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(),
+				grantedAuthorities);
 	}
 }

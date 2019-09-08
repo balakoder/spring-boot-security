@@ -19,59 +19,51 @@ import lombok.extern.slf4j.Slf4j;
 @Repository
 @Transactional
 @Slf4j
-public class UserDao
-{
+public class UserDao {
 
 	@Autowired
 	private SessionFactory sessionFactory;
 
-	private Session getSession()
-	{
+	private Session getSession() {
 		return sessionFactory.getCurrentSession();
 	}
 
-	public void save(User user)
-	{
+	public void save(User user) {
 		getSession().save(user);
 		log.info("user saved successfully !!!");
 	}
 
-	public void delete(User user)
-	{
+	public void delete(User user) {
 		getSession().delete(user);
 		log.info("user deleted successfully !!!");
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<User> getAll()
-	{
+	public List<User> getAll() {
 		return getSession().createQuery("from User").list();
 	}
 
-	public User getByEmail(String email)
-	{
+	public User getByEmail(String email) {
 		log.info("UserDao:getByEmail*.");
-		return (User) getSession().createQuery("from User where email = :email").setParameter("email", email).uniqueResult();
+		return (User) getSession().createQuery("from User where email = :email").setParameter("email", email)
+				.uniqueResult();
 	}
 
-	public User getByUsername(String username)
-	{
+	public User getByUsername(String username) {
 		log.info("UserDao:getByUsername");
-		return (User) getSession().createQuery("from User where username = :username").setParameter("username", username).uniqueResult();
+		return (User) getSession().createQuery("from User where username = :username")
+				.setParameter("username", username).uniqueResult();
 	}
 
-	public User getById(String id)
-	{
+	public User getById(String id) {
 		return getSession().get(User.class, id);
 	}
 
-	public void update(User user)
-	{
+	public void update(User user) {
 		getSession().update(user);
 	}
 
-	public HashSet<Role> getAllRoles()
-	{
+	public HashSet<Role> getAllRoles() {
 		log.info("UserDao:getAllRoles");
 		@SuppressWarnings("unchecked")
 		List<Role> users = getSession().createCriteria(Role.class).list();
@@ -80,9 +72,9 @@ public class UserDao
 
 	}
 
-	public Role findByRole(String role)
-	{
-		return (Role) getSession().createQuery("from Role where name = :role").setParameter("role", role).uniqueResult();
+	public Role findByRole(String role) {
+		return (Role) getSession().createQuery("from Role where name = :role").setParameter("role", role)
+				.uniqueResult();
 	}
 
 }

@@ -12,8 +12,7 @@ import com.bala.springbootsecurity.model.Role;
 import com.bala.springbootsecurity.model.User;
 
 @Service
-public class UserServiceImpl implements UserService
-{
+public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private UserDao userDao;
@@ -22,8 +21,7 @@ public class UserServiceImpl implements UserService
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	@Override
-	public void save(User user)
-	{
+	public void save(User user) {
 
 		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 
@@ -31,13 +29,11 @@ public class UserServiceImpl implements UserService
 		Set<Role> roles = new HashSet<>();
 		roles.add(userDao.findByRole("ROLE_USER"));
 		user.setRoles(roles);
-		user.setRoles(new HashSet<>(userDao.getAllRoles()));
 		userDao.save(user);
 	}
 
 	@Override
-	public User findByUsername(String username)
-	{
+	public User findByUsername(String username) {
 		return userDao.getByUsername(username);
 	}
 }
